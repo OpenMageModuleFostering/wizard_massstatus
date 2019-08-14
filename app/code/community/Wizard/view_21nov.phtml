@@ -1,0 +1,516 @@
+<?php 
+
+$_helper = $this->helper('catalog/output');
+
+$_product = $this->getProduct();
+
+$_config = Mage::getStoreConfig('milanoconfig/productpage');
+
+$_share_config = Mage::getStoreConfig('milanoconfig/share');
+
+$_brand_enabled = $_config['brand'] == 1;
+
+$_use_share = $_share_config['use_share'] == 1;
+
+$_share_code = $_share_config['share_code'];
+
+$_shortDescription = $_product->getShortDescription();
+
+$my_product_manufacturer = Mage::getModel('catalog/product')->load($_product->getId());
+
+?>
+<script type="text/javascript">
+
+    var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+
+</script>
+
+<div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
+<div class="product-view">
+  <div class="product-essential">
+    <div class="product-img-box"> <?php echo $this->getChildHtml('info_tabs') ?> 
+    <img style="float:left; margin-top:0px;" alt="Free shipping" src="<?php echo $this->getSkinUrl() ?>/images/free-shipping1.jpg" />
+<?php /*?>    <img style="float:left; margin-left:-1px; margin-top:15px;" alt="COD" src="<?php echo $this->getSkinUrl() ?>/images/cod.jpg" />
+    <img style="float:left; margin-left:-1px; margin-top:15px;" alt="Easy Online Returns" src="<?php echo $this->getSkinUrl() ?>/images/easy-returns.jpg" />
+    <img style="float:left; margin-left:-1px; margin-top:15px;" alt="Secure Payment" src="<?php echo $this->getSkinUrl() ?>/images/secure-payment.jpg" /><?php */?>
+    </div>
+    <div class="product-shop">
+      <?php if ($my_product_manufacturer->getManufacturer()!=''):?>
+      <div class="brand_on_product_icon"><img src="http://latestsale.in/ssiplonline/media/wysiwyg/ssipl/brands/color/<?php echo $my_product_manufacturer->getManufacturer(); ?>.png" alt="" /> </div>
+      <?php endif;?>
+      <div class="product-name">
+        <?php include('view/labels.phtml') ?>
+        <h1><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name') ?></h1>
+        <?php echo $this->getReviewsSummaryHtml($_product, false, true)?>
+        <?php if ($_shortDescription):?>
+        <div class="short-description"><?php echo $_helper->productAttribute($_product, nl2br($_shortDescription), 'short_description') ?></div>
+        <?php endif;?>
+      </div>
+      <?php if($_brand_enabled):
+
+					$_brand_attr = $_config['brand_attr'];
+
+					if ($_product->getData($_brand_attr)):
+
+							$brandImageExt = trim($_config['brand_image_extension']);
+
+							$brandPageBasePath = trim($_config['brand_page_base_path']);
+
+							$brandLinkSearch = $_config['brand_link_search_enabled'] == 1;
+
+							$attr = $_product->getResource()->getAttribute($_brand_attr);
+
+						//	$brandValue = trim($attr->getFrontend()->getValue($_product));
+
+							$brandValueCode = str_replace(" ", "_", strtolower($brandValue));
+
+							//$brandLabel = $attr->getStoreLabel();
+
+							$brandImageUrl = Mage::registry('themeMediaUrl').'brand-logos/' . $brandValueCode . '.' . $brandImageExt;
+
+							if ($brandLinkSearch)
+
+								$brandPageUrl = Mage::getUrl() . 'catalogsearch/result/?q=' . $brandValue;
+
+							elseif ($brandPageBasePath != '')
+
+							{
+
+								$basePath = ($brandPageBasePath == '/') ? '' : $brandPageBasePath . '/';
+
+								$brandPageUrl = Mage::getUrl() . $basePath . str_replace(" ", "-", strtolower($brandValue));
+
+							}
+
+							else
+
+								$brandPageUrl = '';
+
+							?>
+      <div class="brand-logo clear"> </div>
+      <?php endif; ?>
+      <?php endif; ?>
+      <div class="formdiv">
+      <form action="<?php echo $this->getSubmitUrl($_product) ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+        <div class="no-display">
+          <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+          <input type="hidden" name="related_product" id="related-products-field" value="" />
+        </div>
+        <div class="addtocont clear">
+          <?php if($_product->getTypeId() != 'bundle'): ?>
+          <?php echo $this->getChildHtml('product_type_data') ?> <span class="product-code"><?php echo $this->__('Product code:').' <strong>'.$_product->getSku().'</strong>'; ?></span>
+          <?php endif;?>
+          <?php if($_product->getTypeId() != 'bundle'): ?>
+          <?php echo $this->getPriceHtml($_product) ?>
+          <?php else: ?>
+          <span class="product-code"><?php echo $this->__('Product code:').'<strong>'.$_product->getSku().'</strong>'; ?></span> <?php echo $this->getChildHtml('product_type_data') ?>
+          <?php endif;?>
+          
+          <?php if($_product->getOffer()){ ?>
+	          <div class='offerbox'>
+	            <a href="javascript:void(0)" class='offeropen'>Click for Offer</a>
+	            <div class='offercontent'>
+	              <!--<a href="javascript:void(0)" class='offerclose'>X</a>-->
+	              <?php echo $_product->getOffer(); ?>
+	            </div>
+	          </div>
+          <?php } ?>
+          
+        </div>
+        <?php if($_tierPriceHtml = $this->getTierPriceHtml()): ?>
+        <div class="clear"><?php echo $_tierPriceHtml; ?></div>
+        <?php endif; ?>
+        <?php if($_extraHint = $this->getChildHtml('extrahint')): ?>
+        <div class="clear"><?php echo $_extraHint ?></div>
+        <?php endif; ?>
+        <?php if($_alertUrls = $this->getChildHtml('alert_urls')): ?>
+        <div class="product-alerts clear"><?php echo $_alertUrls; ?></div>
+        <?php endif; ?>
+        <?php if($_promoMessage = $this->getChildHtml('product_promo_message')): ?>
+        <div class="clear"><?php echo $this->getChildHtml('product_promo_message') ?></div>
+        <?php endif; ?>
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+        <div class="clear" id="container1"><?php echo $this->getChildChildHtml('container1', '', true, true) ?>
+          <div class="clear"></div>
+        </div>
+        <?php endif;?>
+        <?php if ($_productDataGrouped = $this->getChildHtml('product_type_data_grouped')): ?>
+        <div class="clear"><?php echo $_productDataGrouped; ?></div>
+        <?php endif; ?>
+        <?php if (!$this->hasOptions()):?>
+        <div class="add-to-box clear"> 
+          
+          <!-- ############################## Star My Code Here ###############################################################-->
+          
+          <?php  $quantity= Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty(); 
+		       $stock=number_format($quantity);
+		?>
+          <?php if($stock!=0)
+         {?>
+          <div class="add-to-cart">
+            <button type="submit" title="Add to Cart" class="button btn-cart"><span><span>Add to Cart</span></span></button>
+          </div>
+          <?php } else{ ?>
+          <div class="add-to-cart">
+            <button type="button" title="Add to Cart" class="button btn-cart"><span><span>OUT OF STOCK</span></span></button>
+          </div>
+          <?php  } ?>
+        </div>
+        
+        <!-- ################################## END Here #############################################################-->
+        
+        <?php else: ?>
+        <?php endif; ?>
+              
+        <?php echo $this->getChildHtml('other');?>
+        <?php if ($_product->isSaleable() && $this->hasOptions()):?>
+        <div class="clear" id="container2">
+		
+		<?php if ($_product->isSaleable() && $this->hasOptions()):?>
+      <div class="sizeCartmain">
+        <div id="sizecartlight" class="size-cart-white_content">
+          <div class="size-cart-cent">
+            <?php $b = 0;?>
+            <?php if($_product->getGender() != 196)
+
+	  {
+
+	  ?>
+            <img alt="" src="<?php echo $this->getSkinUrl() ?>/images/size-chart-men.png" />
+            <?php }else{ ?>
+            <img alt="" src="<?php echo $this->getSkinUrl() ?>/images/size-chart-women.png" />
+            <?php } ?>
+            <a class="size-cart-close-button" href="javascript:void(0)" onclick="document.getElementById('sizecartlight').style.display='none';document.getElementById('sizecartfade').style.display='none'">x</a> </div>
+        </div>
+        <a onclick="document.getElementById('sizecartlight').style.display='block';document.getElementById('sizecartfade').style.display='block'" href="javascript:void(0)">Size Chart
+		<?php /*?><img alt="" src="<?php echo $this->getSkinUrl() ?>/images/not-sure.png" /><?php */?> </a> 
+        
+              <div id="sizecartfade" class="size-cart-black_overlay"></div>
+
+        
+        </div>
+      <?php else: ?>
+      <?php endif; ?>
+        
+		<?php echo $this->getChildChildHtml('container2', '', true, true) ?>
+        </div>
+        <?php endif;?>
+      </form>
+      <script>
+
+					var txtStock = jQuery('.addtocont .availability span').text();
+
+					if(txtStock != "In stock")
+
+					{
+
+						//document.write(jQuery('.addtocont .availability span').text());						
+
+						jQuery(".no-stock").css("display","block");
+
+                     }
+
+					 </script> 
+      <script type="text/javascript">
+
+                //<![CDATA[
+
+                    var productAddToCartForm = new VarienForm('product_addtocart_form');
+
+                    var loaderBckImg = '<?php echo $this->getSkinUrl('images/loading.gif')?>';
+
+                    var successMsg = '<?php echo $this->__('was successfully added to your shopping cart.') ?>';
+
+                    var continueMsg = '<?php echo $this->__('Continue shopping') ?>';
+
+                    var cartUrl = '<?php echo $this->getUrl('checkout/cart')?>';
+
+                    var cartMsg = '<?php echo $this->__('View cart & checkout') ?>';
+
+                    var errorMsg = '<?php echo $this->__('Error') ?>';
+
+					jQuery('.rating-links > a').click(function(e){ e.preventDefault(); jQuery('#product_tabs_product_review > a').click(); });
+
+                //]]>
+
+                </script>
+      <?php if($_use_share && $_share_code): ?>
+      <div class="clear"><?php echo $_share_code; ?></div>
+      <?php endif; ?>
+      
+	                  		<!--Delivery Check Plugin Script-->
+
+    
+
+    <div id="delivery_CheckBlock">
+
+    <div id="LeftCheck">
+
+      <div id="ZIPUnfill"> <span id="ZIPChcekText">Check Availability:</span> </div>
+
+      <div id="ZIPfill" style="display:none;"> <span id="ZIPChcekText">Delivery to Pincode:</span><span id="ZIP_Result"><span id="ZipCode">&nbsp;</span> <a href="#edit" id="editZip">Edit</a></span> </div>
+
+    </div>
+
+    <div id="RightCheck">
+
+    <div id="ZIPUnfill2">
+
+    <form action="" name="DeliVeryChecker">
+
+      <input type="text" name="DeliveryZip" Placeholder="Enter Pincode" id="DeliveryZip" value=""/>
+
+      <input type="button" name="DeliveryCheck" id="DeliveryCheck" value="Check"/>
+			<span class="ErrorZip" style="color:red;"></span>
+    </form>
+
+  </div>
+
+  <div id="ZIPfill2" style="display:none;"><span id="ZIPChcekText"></span><span id="ZiptimeDay"></span></div>
+
+  <div style="clear:both;"></div>
+
+</div>
+
+
+
+<!--end Delivery Check Plugin--> 
+
+
+
+
+
+<script>
+
+jQuery(document).ready(function($){
+
+
+
+
+
+
+
+	$("#DeliveryCheck").click(function(){
+	
+	var zipcode 	=	$("#DeliveryZip").val();
+	
+	if( zipcode == '')
+		{
+		jQuery(".ErrorZip").text("Must Entrer A Pincode");
+		setTimeout(function(){
+		jQuery(".ErrorZip").text('');
+		
+		},2000);
+		}else if( zipcode.length !== 6 ){
+		
+		jQuery(".ErrorZip").text("Must Entrer 6 Digits");
+		jQuery("#DeliveryZip").val('');
+		setTimeout(function(){
+	
+		jQuery(".ErrorZip").text('');
+		
+		},2000);
+		}else{
+	
+
+	   $.post("<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);?>js/action/deliverycheck-action.php", {
+
+                    zip: $("#DeliveryZip").val(),
+                    action: $("#DeliveryCheck").val()
+                },
+                function(data, status) {
+                    if (status == "success") {
+
+
+
+					var json = $.parseJSON(data);
+
+						
+						if ( json == null)
+						{
+						
+						$("#ZIPfill,#ZIPfill2").css('display','block');
+
+
+
+					$("#ZIPUnfill,#ZIPUnfill2").css('display','none');
+
+
+
+					$("#ZipCode").text( zipcode );
+
+
+
+					$("#ZiptimeDay").text( 'Delivery not available' );
+						
+						}else{
+
+					$("#ZIPfill,#ZIPfill2").css('display','block');
+
+
+
+					$("#ZIPUnfill,#ZIPUnfill2").css('display','none');
+
+
+
+					$("#ZipCode").text( json.PINCODE );
+
+
+
+					$("#ZiptimeDay").text( 'Estimated Delivery:3-5 business days. ' );
+
+
+
+                    }
+
+				}
+
+                });
+
+		}
+
+			
+
+
+
+	});
+
+	
+	
+
+
+
+	$("#editZip").click(function(){
+
+
+
+	$("#ZIPfill,#ZIPfill2").css('display','none');
+
+
+
+	$("#ZIPUnfill,#ZIPUnfill2").css('display','block');
+
+
+
+	});
+
+
+
+
+});	
+
+jQuery.noConflict();
+</script> 
+
+
+	
+
+      <div class="socialMedia" style="overflow:hidden;"> <span class='st_facebook_hcount' displayText='Facebook'></span> <span class='st_twitter_hcount' displayText='Tweet'></span> <span class='st_linkedin_hcount' displayText='LinkedIn'></span> <span class='st_pinterest_hcount' displayText='Pinterest'></span> 
+        
+        <!--<span class='st_email_hcount' displayText='Email'></span> --> 
+        
+      </div>
+      </div>
+      
+      
+    </div>
+  </div>
+  <?php if($this->getChildHtml('related_products')) {
+
+		echo '<div class="product_row_div">';
+
+	}
+
+	else {
+
+		echo '<div class="product_row_div" style="width:1000px; margin:0 0 0 0;">';
+
+	}
+
+	
+
+	
+
+	?>
+  <?php $my_product = Mage::getModel('catalog/product')->load($_product->getId()); if ($my_product):?>
+  <div class="full-description clear">
+    <h2>PRODUCT DETAIL</h2>
+    <div class="description"><?php echo $my_product->getDescription(); ?></div>
+  </div>
+  <?php endif;?>
+  <?php if($_infoAccordion = $this->getChildHtml('info_accordion')): ?>
+  <div class="clear"><?php echo $_infoAccordion; ?></div>
+  <table class="data-table" id="product-attribute-specs-table" style="margin: -40px 0;">
+    <colgroup>
+    <col width="25%">
+    <col>
+    </colgroup>
+    <tbody>
+      <tr>
+        <th class="label">Availability </th>
+        <td id="availability_td_id" class="data"><script>document.write(jQuery('.addtocont .availability span').text());</script></td>
+      </tr>
+      <tr>
+        <th class="label">SKU</th>
+        <td id="product_code_td_id" class="data"><script>document.write(jQuery('.addtocont .product-code strong').text());</script></td>
+      </tr>
+    </tbody>
+  </table>
+  <?php endif; ?>
+</div>
+<div class="related_products_row_div">
+  <div class="product-collateral">
+    <?php // echo $this->getChildHtml('info_tabs') ?>
+    <?php echo $this->getChildHtml('product_additional_data') ?> </div>
+  <?php echo $this->getChildHtml('related_products') ?> <?php echo $this->getChildHtml('upsell_products') ?> </div>
+</div>
+
+<style>
+
+.offercontent{border: 1px solid #bbb; margin-top:-18px; padding:10px; background: white; position: absolute; box-shadow: 0 4px 10px #999; display: none; z-index: 1000}
+.offerclose{float:right; text-decoration: none; font-size:15px; margin-top:-7px;}
+.offerclose:hover{text-decoration: none}
+.offeropen {
+  float: left;
+  font-size: 14px;
+  margin-left: 120px;
+  margin-top: -44px;
+  color: #e36025
+}
+.offeropen:hover{text-decoration: none;}
+</style>
+<script>
+var oflag=true;
+/*jQuery('.offeropen').click(function(){
+  jQuery('.offercontent').toggle();
+  if(oflag){
+    jQuery('.offeropen').css('margin-top','-39px'); oflag=false;
+  }
+  else{
+    jQuery('.offeropen').css('margin-top','-44px'); oflag=true;
+  }
+
+})
+jQuery('.offerclose').click(function(){
+  jQuery('.offercontent').toggle();
+  if(oflag){
+    jQuery('.offeropen').css('margin-top','-39px'); oflag=false;
+  }
+  else{
+    jQuery('.offeropen').css('margin-top','-44px'); oflag=true;
+  }
+})*/
+
+jQuery(".offerbox").hover(
+    function(){
+      jQuery('.offercontent').toggle();
+    },
+    function(){
+      jQuery('.offercontent').toggle();
+    }
+  );
+        
+
+
+
+</script>

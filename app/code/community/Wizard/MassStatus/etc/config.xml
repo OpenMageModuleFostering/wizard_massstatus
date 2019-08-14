@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!-- 
+ * Magento Wizard Admin Mass Status Module
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category   Wizard
+ * @package    Wizard_MassStatus
+ * @copyright  Copyright (c) 2015 Wizard (http://www.sujeetkrsingh.com)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *
+--> 
+<config>
+	<modules>
+		<Wizard_MassStatus>
+			<version>1.0.0</version>
+		</Wizard_MassStatus>
+	</modules>
+	 <global>
+        <helpers>
+            <wizard_massstatus>
+                <class>Wizard_MassStatus_Helper</class>
+            </wizard_massstatus>
+        </helpers>
+         <blocks>
+            <adminhtml>
+                <rewrite>
+                    <sales_order_grid>Wizard_MassStatus_Block_Sales_Order_Grid</sales_order_grid>
+                </rewrite>
+            </adminhtml>
+        </blocks>
+    </global>
+    <admin>
+         <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <wizard_massstatus before="Mage_Adminhtml">Wizard_MassStatus_Adminhtml</wizard_massstatus>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <default>
+        <massstatus>
+        <condition_name>mass_status</condition_name>
+        </massstatus>
+        </default>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <mass_status>
+                                            <title>Mass Status</title>
+                                        </mass_status>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>

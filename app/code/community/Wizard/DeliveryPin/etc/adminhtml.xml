@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <deliverypin>
+            <title>Delivery PIN</title>
+            <sort_order>100</sort_order>
+            <children>
+                <addupdate>
+                    <title>Add/Update</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/deliverypin/index</action>
+                </addupdate>
+            </children>
+        </deliverypin>
+    </menu>
+</config>

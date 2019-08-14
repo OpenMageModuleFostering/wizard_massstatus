@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+    <name>Wizard_MassStatus</name>
+    <version>1.0.0</version>
+    <stability>stable</stability>
+    <license uri="http://opensource.org/licenses/osl-3.0.php">Open Software License (OSL)</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Adds all order statuses created in "System &gt; Order Statuses" under action dropdown of "Sales Order".</summary>
+    <description>Mass Status Extension all order statuses created in "System &gt; Order Statuses" under action dropdown of "Sales Order" grid view plus one more extra option "Delete".&#xD;
+Magento doesn't have delete order as default option. Using delete option of mass status you can delete multiple orders in one go.&#xD;
+In Magento you can't cancel a processed order, this is a feature not a bug. But sometimes we face such circumstances when we need to change the order status to "Canceled".&#xD;
+Using &lt;strong&gt;Mass Status&lt;/strong&gt; you can also change the status of a processed order to canceled*.</description>
+    <notes>New Extension</notes>
+    <authors><author><name>Sujeet Kr Singh</name><user>sujeet</user><email>sujeet.kumar.000@gmail.com</email></author></authors>
+    <date>2015-01-11</date>
+    <time>11:17:15</time>
+    <contents><target name="magecommunity"><dir name="Wizard"><dir name="DeliveryPin"><dir name="Block"><dir name="Adminhtml"><file name="Addupdate.php" hash="2c8bc77d7ffda97cd75ef9ad15ab7c75"/></dir></dir><dir name="Helper"><file name="Data.php" hash="4117aad2c9924399c9dcbc158f079f36"/></dir><dir name="controllers"><dir name="Adminhtml"><file name="DeliverypinController.php" hash="d43a422c49417fcdfe881b6c80d6ad28"/></dir><file name="PinController.php" hash="5f1f061dffa1c7f2e61dd7b86a1b92ac"/></dir><dir name="etc"><file name="adminhtml.xml" hash="b8a74fd354e392f32df0b23f9151c59f"/><file name="config.xml" hash="68aca52854318f2bab6e58a4302bb741"/><file name="system.xml2" hash="2868b9114b8ab496f3b6d08a54e859e7"/></dir></dir><dir name="MassStatus"><dir name="Block"><dir name="Sales"><dir name="Order"><file name="Grid.php" hash="6766cb57008956262acaa8f50a6ccf9a"/></dir></dir></dir><dir name="Helper"><file name="Data.php" hash="95fe9b08090682417c93fb626568a7d9"/></dir><dir name="controllers"><dir name="Adminhtml"><file name="MassstatusController.php" hash="cd7653203c1b8f286b44a90122cbea18"/></dir></dir><dir name="etc"><file name="config.xml" hash="fe81584e62e2314b7030927b3e8225e7"/><file name="system.xml" hash="512cef1987088c64454c9e3e0d5dfbdd"/></dir></dir><dir name="ShippingType"><dir name="Helper"><file name="Data.php" hash="f564cfb8c6f7176dceb9fdf0d0f97136"/></dir><dir name="controllers"><file name="CitiesController.php" hash="39d1a261e68310f07c9059b1dfce8951"/></dir><dir name="etc"><file name="adminhtml.xml" hash="3ecd111d8f1c43baf01578cfdb846fa5"/><file name="config.xml" hash="73c58329f8e2dc934c6b0121dbad902d"/></dir></dir><file name="billing_21nov.phtml" hash="1bf4e9197adcf79e4a40cdbb801b2c9a"/><file name="view_21nov.phtml" hash="35523e9363aa8d553aafe51cf05d22fc"/></dir></target><target name="mageetc"><dir name="modules"><file name="Wizard_MassStatus.xml" hash="391de738e56cf7f0b93a21a48195b515"/></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.2.0</min><max>6.0.0</max></php></required></dependencies>
+</package>

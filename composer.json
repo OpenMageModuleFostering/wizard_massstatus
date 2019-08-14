@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Wizard_MassStatus",
+    "type": "magento-module",
+    "license": "Open-Software-License-(OSL)",
+    "homepage": "",
+    "description": "Adds all order statuses created in "System > Order Statuses" under action dropdown of "Sales Order".",
+    "authors": [
+    {
+        "name": "Sujeet Kr Singh",
+        "email": "sujeet.kumar.000@gmail.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

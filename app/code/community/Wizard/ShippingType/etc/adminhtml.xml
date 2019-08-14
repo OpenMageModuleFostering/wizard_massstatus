@@ -1,0 +1,16 @@
+<config>
+    <menu>
+        <shippingtype translate="title" module="gt_shippingtype">
+            <title>Shipping Type</title>
+            <sort_order>15</sort_order>
+            <children>
+                <cities>
+                    <title>Add Cities</title>
+                    <sort_order>1</sort_order>
+                    <action>adminhtml/shippingtype/index</action>
+                </cities>
+            </children>
+        </pulsestorm>
+    </menu>
+    
+</config> 

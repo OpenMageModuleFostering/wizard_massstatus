@@ -1,0 +1,70 @@
+<config>
+	<modules>
+        <GT_ShippingType>
+            <version>0.1.0</version>
+        </GT_ShippingType>
+    </modules>
+    <adminhtml>
+	    <acl>
+	        <resources>
+	            <admin>
+	                <children>                
+	                    <shippingtype translate="title" module="shippingtype">
+	                        <title>Top Level GT Shippingtyep Menu Item</title>
+	                        <sort_order>1</sort_order>
+	                        <children>
+	                            <cities translate="title" module="shippingtype">
+	                                <title>Cities Menu Item</title>
+	                            </cities>
+	                        </children>
+	                    </shippingtype>
+	                </children>
+	            </admin>
+	        </resources>
+	    </acl>
+	</adminhtml>
+	<admin>
+		<routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <shippingtype before="Mage_Adminhtml">GT_ShippingType_Adminhtml</awesome>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+	</admin>
+	<global>
+		<models>
+            <shippingtype>
+                <class>GT_ShippingType_Model</class>
+                <resourceModel>shippingtype_mysql4</resourceModel>
+            </shippingtype>
+             <shippingtype_mysql4>
+                <class>GT_ShippingType_Model_Mysql4</class>
+                <entities>
+                    <cities>
+                        <table>GT_ShippingType_cities</table>
+                    </cities>
+                </entities>
+            </shippingtype_mysql4>
+        </models>
+        
+        <helpers>
+            <shippingtype>
+                <class>GT_ShippingType_Helper</class>
+            </shippingtype>
+        </helpers>
+    </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <GT_ShippingType after="Mage_Adminhtml">GT_ShippingType</GT_ShippingType>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>
